@@ -1,0 +1,3 @@
+# TaskManager
+this is one of the first apps that i made with jetpack compose. it uses a local database managed with SQLite and Room Dtabase to save the activities that you want to do in a certain date.
+you can add notes to every activity and mark them done as you complete them.
