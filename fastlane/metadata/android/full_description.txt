@@ -1,0 +1,6 @@
+An application to add your daily tasks and track them as you progress.
+
+features:
+    - add tasks for any date
+    - add as many notes for any task
+    - mark tasks done as you complete them
