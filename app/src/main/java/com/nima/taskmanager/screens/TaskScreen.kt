@@ -142,6 +142,6 @@ fun TaskScreen(
 
         DialogButton(onButtonClicked = {
             timePickerDialog.show()
-        }, text = "Selected Date: $time")
+        }, text = "Selected Time: $time")
     }
 }
