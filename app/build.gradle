@@ -30,12 +30,6 @@ project.afterEvaluate {
     }
 }
 
-tasks.whenTaskAdded { task ->
-    if (task.name.contains("ArtProfile")) {
-        task.enabled = false
-    }
-}
-
 android {
     namespace 'com.nima.taskmanager'
     compileSdk 32
