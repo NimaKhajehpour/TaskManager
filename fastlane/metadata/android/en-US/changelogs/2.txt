@@ -1,0 +1,3 @@
+* On add task screen added controls for confirm and cancel changes
+* on add task screen description is not required anymore
+* on main screen deleting task and notes needs confirmation
