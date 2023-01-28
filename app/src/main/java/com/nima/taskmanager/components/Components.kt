@@ -360,6 +360,11 @@ fun TaskTextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = singleLine,
             textStyle = textStyle,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
         )
     }
 }

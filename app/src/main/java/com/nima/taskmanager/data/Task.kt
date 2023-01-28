@@ -12,7 +12,7 @@ data class Task(
     @ColumnInfo
     var title: String,
     @ColumnInfo
-    var description: String,
+    var description: String = "",
     @ColumnInfo
     var done: Boolean = false,
     @ColumnInfo
