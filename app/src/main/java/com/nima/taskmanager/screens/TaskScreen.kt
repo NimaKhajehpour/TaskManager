@@ -16,7 +16,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -86,7 +91,7 @@ fun TaskScreen(
         },Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true
     )
     BackHandler(enabled = true) {
-        if (task.title.isNullOrBlank() || task.description.isNullOrBlank()){
+        if (task.title.isNullOrBlank()){
             onDeleteTask(task)
             navController.popBackStack()
         }else{
@@ -97,7 +102,7 @@ fun TaskScreen(
     OnLifecycleEvent{ owner, event->
         when(event){
             Lifecycle.Event.ON_DESTROY -> {
-                if (task.title.isBlank() || task.description.isBlank()){
+                if (task.title.isBlank()){
                     onDeleteTask(task)
                 }else{
                     updateTask(task)
@@ -115,9 +120,38 @@ fun TaskScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
             ){
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            IconButton(onClick = {
+                onDeleteTask(task)
+                navController.popBackStack()
+            }) {
+                Icon(imageVector = Icons.Default.Close, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.weight(1f))
+
+            IconButton(onClick = {
+                if (task.title.isBlank()){
+                    Toast.makeText(context, "Title Is Required", Toast.LENGTH_SHORT).show()
+                }else{
+                    updateTask(task)
+                    navController.popBackStack()
+                }
+            }) {
+                Icon(imageVector = Icons.Default.Done, contentDescription = null)
+            }
+
+        }
+
         TaskTextField(
             textFieldValue = taskTitle,
-            labelText = "Title",
+            labelText = "Title *",
             onValueChange = {
                 taskTitle = it
                 task.title = taskTitle

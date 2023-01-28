@@ -1,5 +1,6 @@
 package com.nima.taskmanager.screens
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.nima.taskmanager.components.NoteListItem
@@ -40,6 +42,24 @@ fun MainScreen(
     onDeleteTask: (Task) -> Unit
 )
 {
+
+    val context = LocalContext.current
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var noteForDelete: Note? by remember {
+        mutableStateOf(null)
+    }
+
+    var taskForDelete: Task? by remember {
+        mutableStateOf(null)
+    }
+
+    var taskDeleted by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         modifier = Modifier
@@ -73,6 +93,76 @@ fun MainScreen(
             }
         },
     ) {
+
+        if (showDialog){
+            if (taskForDelete == null){
+                AlertDialog(onDismissRequest = {
+                    taskForDelete = null
+                    noteForDelete = null
+                    showDialog = false
+                },
+                    title = {
+                        Text(text = "Confirm Delete!")
+                    },
+                    text = {
+                        Text(text = "You are about to delete a note, Are you sure you want to do it?")
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            taskForDelete = null
+                            onDeleteNote(noteForDelete!!)
+                            noteForDelete = null
+                            showDialog = false
+                        }) {
+                            Text(text = "Confirm")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            taskForDelete = null
+                            noteForDelete = null
+                            showDialog = false
+                        }) {
+                            Text(text = "Cancel")
+                        }
+                    },
+                )
+            }else{
+                AlertDialog(onDismissRequest = {
+                    taskForDelete = null
+                    noteForDelete = null
+                    showDialog = false
+                },
+                    title = {
+                        Text(text = "Confirm Delete!")
+                    },
+                    text = {
+                        Text(text = "You are about to delete a task, Are you sure you want to do it?")
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            taskDeleted = true
+                            noteForDelete = null
+                            onDeleteTask(taskForDelete!!)
+                            taskForDelete = null
+                            showDialog = false
+                        }) {
+                            Text(text = "Confirm")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            taskForDelete = null
+                            noteForDelete = null
+                            showDialog = false
+                        }) {
+                            Text(text = "Cancel")
+                        }
+                    },
+                )
+            }
+        }
+
         LazyColumn(){
             val grouped = tasks.groupBy { it.date }
             grouped.forEach{ (initial, items) ->
@@ -98,6 +188,14 @@ fun MainScreen(
                         var noteDescription by remember{
                             mutableStateOf("")
                         }
+
+                        if (taskDeleted){
+                            if (doneState){
+                                doneCountState.value --
+                                taskDeleted = false
+                            }
+                        }
+
                         TaskListItem(
                             taskDone = doneState,
                             addNoteClicked = addNoteClicked,
@@ -131,10 +229,13 @@ fun MainScreen(
                                 }
                             },
                             onDeleteClicked = {
-                                if (doneState) {
-                                    doneCountState.value--
-                                }
-                                onDeleteTask(task)
+//                                if (doneState) {
+//                                    doneCountState.value--
+//                                }
+//                                onDeleteTask(task)
+                                noteForDelete = null
+                                taskForDelete = task
+                                showDialog = true
                             },
                             onAddNoteClicked = {
                                 addNoteClicked = addNoteClicked.not()
@@ -156,7 +257,9 @@ fun MainScreen(
                                         it.foreignKey == task.id
                                     }.forEach { note ->
                                         NoteListItem(noteDescription = note.description) {
-                                            onDeleteNote(note)
+                                            noteForDelete = note
+                                            taskForDelete = null
+                                            showDialog = true
                                         }
                                     }
                                 }
