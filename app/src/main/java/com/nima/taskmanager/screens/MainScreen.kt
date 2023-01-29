@@ -61,6 +61,10 @@ fun MainScreen(
         mutableStateOf(false)
     }
 
+    var taskDone by remember {
+        mutableStateOf(false)
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -190,9 +194,10 @@ fun MainScreen(
                         }
 
                         if (taskDeleted){
-                            if (doneState){
+                            if (taskDone){
                                 doneCountState.value --
                                 taskDeleted = false
+                                taskDone = false
                             }
                         }
 
