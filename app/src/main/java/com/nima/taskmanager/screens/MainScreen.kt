@@ -241,6 +241,7 @@ fun MainScreen(
                                 noteForDelete = null
                                 taskForDelete = task
                                 showDialog = true
+                                taskDone = doneState
                             },
                             onAddNoteClicked = {
                                 addNoteClicked = addNoteClicked.not()
